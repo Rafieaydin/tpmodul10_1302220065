@@ -28,8 +28,19 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapGet("/", () =>
+app.MapGet("/", async  (mhsDB db) =>
 {
+    var mhs = new Mahasiwsa[]
+{
+        new Mahasiwsa { Id = 1, Nama = "Nasya Kirana Marendra", Nim = "1302223148" },
+        new Mahasiwsa { Id = 2, Nama = "Zabrina Virgie", Nim = "1302223055" },
+        new Mahasiwsa { Id = 3, Nama = "Dara Sheiba M.C", Nim = "1302223075 " },
+        new Mahasiwsa { Id = 4, Nama = "M Tsaqif Zayyan", Nim = "1302220141" },
+        new Mahasiwsa { Id = 5, Nama = "M Arifin Ilham", Nim = "1302223061" },
+        new Mahasiwsa { Id = 6, Nama = "Rafie Aydin Ihsan", Nim = "1302220065" },
+};
+    db.mhs.AddRange(mhs);
+    await db.SaveChangesAsync();
     // dari aspnetcore.httml
     return Results.Redirect("/swagger"); // redirect to swagger
 });
@@ -37,16 +48,7 @@ app.MapGet("/", () =>
 app.MapGet("/mahasiswa", async (mhsDB db) =>
 {
     // default data using array list 
-    var mhs = new Mahasiwsa[]
-    {
-        new Mahasiwsa { Id = 1, Nama = "Nasya Kirana Marendra", Nim = "1302223148" },
-        new Mahasiwsa { Id = 2, Nama = "Zabrina Virgie", Nim = "1302223055" },
-        new Mahasiwsa { Id = 3, Nama = "Dara Sheiba M.C", Nim = "1302223075 " },
-        new Mahasiwsa { Id = 4, Nama = "M Tsaqif Zayyan", Nim = "1302220141" },
-        new Mahasiwsa { Id = 5, Nama = "M Arifin Ilham", Nim = "1302223061" },
-        new Mahasiwsa { Id = 6, Nama = "Rafie Aydin Ihsan", Nim = "1302220065" },
-    };
-    await db.SaveChangesAsync();
+
     return Results.Ok(await db.mhs.ToListAsync());
 });
 
@@ -78,7 +80,7 @@ app.MapPut("/mahasiswa/{id}", async (mhsDB db, int id, Mahasiwsa mhs) =>
     await db.SaveChangesAsync();
     return Results.NoContent();
 });
-
+    
 app.MapDelete("/mahasiswa/{id}", async (mhsDB db, int id) =>
 {
     var mhs = await db.mhs.FindAsync(id);
